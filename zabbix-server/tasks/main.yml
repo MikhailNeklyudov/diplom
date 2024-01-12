@@ -1,0 +1,80 @@
+---
+# tasks file for zabbix-server
+- name: Install Postgresql
+  ansible.builtin.apt:
+    name: postgresql
+    state: present
+    update_cache: yes
+
+- name: Install Zabbix Server 6.4 Debian repo .rpm
+  ansible.builtin.apt:
+    deb: https://repo.zabbix.com/zabbix/6.4/debian/pool/main/z/zabbix-release/zabbix-release_6.4-1+debian11_all.deb
+
+
+- name: Install Zabbix Server
+  ansible.builtin.apt:
+    name: zabbix-server-pgsql
+    state: present
+    update_cache: yes
+
+
+- name: Install Zabbix frontend
+  ansible.builtin.apt:
+    name: zabbix-frontend-php
+    state: present
+
+
+- name: Install Zabbix php pqsql
+  ansible.builtin.apt:
+    name: php7.4-pgsql
+    state: present
+
+
+- name: Install Zabbix nginx
+  ansible.builtin.apt:
+    name: zabbix-nginx-conf
+    state: present
+
+
+- name: Install Zabbix scripts
+  ansible.builtin.apt:
+    name: zabbix-sql-scripts
+    state: present
+
+
+- name: Install Zabbix agent
+  ansible.builtin.apt:
+    name: zabbix-agent
+    state: present
+
+#- name: Import the Elasticsearch PGP Key
+#  shell:
+#    sudo -u postgres createuser --pwprompt zabbix
+#  args:
+#    warn: no
+
+#- name: Import the Elasticsearch PGP Key
+#  shell:
+#    sudo -u postgres createdb -O zabbix zabbix
+#  args:
+#    warn: no
+
+#- name: Import the Elasticsearch PGP Key
+#  shell:
+#    zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql zabbix
+#  args:
+#    warn: no
+
+
+- name: Restart Zabbix agent
+  service:
+    name: zabbix-agent
+    state: restarted
+    enabled: yes
+
+- name: Restart Zabbis Server
+  service:
+    name: zabbix-server
+    state: restarted
+    enabled: yes
+

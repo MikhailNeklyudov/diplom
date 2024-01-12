@@ -1,0 +1,31 @@
+---
+# tasks file for filebeat
+- name: Install gnupg
+  ansible.builtin.apt:
+    name: gnupg
+    state: present
+    update_cache: yes
+
+- name: Import the Elasticsearch PGP Key
+  shell:
+    wget -qO - http://elasticrepo.serveradmin.ru/elastic.asc | apt-key add -
+  args:
+    warn: no
+
+- name: Add repository defiition
+  copy:
+    dest: /etc/apt/sources.list.d/elasticrepo.list
+    content: |
+      deb http://elasticrepo.serveradmin.ru bullseye main
+
+#- name: install filebeat
+#  ansible.builtin.apt:
+#    name: filebeat
+#    state: present
+#    update_cache: true
+
+#- name: Restart filebeat
+#  service:
+#    name: filebeat
+#    state: restarted
+#    enabled: yes

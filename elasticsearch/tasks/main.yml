@@ -1,0 +1,76 @@
+---
+# tasks file for elasticsearch
+- name: Install gnupg
+  ansible.builtin.apt:
+    name: gnupg
+    state: present
+    update_cache: yes
+
+
+#- name: install elasticsearch deb repository
+#  ansible.builtin.apt_repository:
+#    repo: deb https://elasticrepo.serveradmin.ru bullseye main
+#    state: present
+
+
+#- name: import the elasticsearch apt key
+#  ansible.builtin.apt_key:
+#    url: https://elasticrepo.serveradmin.ru/elastic.asc
+#    state: present
+
+
+#- name: install elasticsearch
+#  apt:
+#    name: elasticsearch
+#    state: present
+#    update_cache: true
+
+
+#  loop:
+#    - openjdk-8-jre-headless
+#    - elasticsearch
+#  become: true
+
+- name: Import the Elasticsearch PGP Key
+  shell:
+    wget -qO - http://elasticrepo.serveradmin.ru/elastic.asc | apt-key add -
+  args:
+    warn: no
+
+- name: Add repository defiition
+  copy:
+    dest: /etc/apt/sources.list.d/elasticrepo.list
+    content: |
+      deb http://elasticrepo.serveradmin.ru bullseye main
+
+#- name: install elasticsearch
+#  ansible.builtin.apt:
+#    name: elasticsearch
+#    state: present
+#    update_cache: true
+
+#- name: Restart elasticsearch
+#  service:
+#    name: elasticsearch
+#    state: restarted
+#    enabled: yes
+
+#- name: Install the Elasticsearch package
+#  apt:
+#    name: elasticsearch
+#    state: present
+#    update_cache: yes
+#  notify:
+#    - Start Elasticsearch
+#    - Enable Elasticsearch
+
+#handlers:
+#  - name: Start Elasticsearch
+#    systemd:
+#      name: elasticsearch
+#      state: started
+#
+#- name: Enable Elasticsearch
+#  systemd:
+#    name: elasticsearch
+#    enabled: yes

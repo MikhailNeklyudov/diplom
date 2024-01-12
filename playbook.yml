@@ -1,0 +1,62 @@
+---
+
+- name: "Install packages"
+  hosts: all
+  become: true
+  tasks:
+
+  - name: "Ensure that required packages are installed"
+    apt:
+      name:
+        - vim
+        - ca-certificates
+        - curl
+        - apt-transport-https
+        - wget
+        - net-tools
+      state: present
+ 
+- name: "Install packages nginx and zabbix-agent"
+  hosts: webservers
+  become: true
+  roles:
+  - role: nginx
+  - role: zabbix-agent
+  - role: filebeat
+
+#  - name: "Install nginx"
+#    apt:
+#      name:
+#        - nginx
+#      state: present
+#
+#  - name: "Restart nginx"
+#    service:
+#      name: nginx
+#      state: restarted
+#      enabled: yes
+#
+#  - name: "Install zabbix-agent"
+#    apt:
+#      name:
+#        - zabbix-agent
+#      state: present
+
+- name: "Install zabbix-server"
+  hosts: Zabbixserver
+  become: true
+  roles:
+  - role: zabbix-server
+
+- name: "Install elasticsearch"
+  hosts: elasticsearch
+  become: true
+  roles:
+  - role: elasticsearch
+
+- name: "Install kibana"
+  hosts: kibana
+  become: true
+  roles:
+  - role: kibana
+ 
